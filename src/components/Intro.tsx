@@ -15,25 +15,25 @@ export function Intro() {
     tl.fromTo(
       textRef.current,
       { opacity: 0, scale: 0.95, filter: "blur(4px)" },
-      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power2.out" }
+      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" }
     );
 
     // 2. Hold for a moment
-    tl.to({}, { duration: 0.8 });
+    tl.to({}, { duration: 0.4 });
 
     // 3. Text fades out
     tl.to(textRef.current, {
       opacity: 0,
       scale: 1.05,
       filter: "blur(4px)",
-      duration: 1,
+      duration: 0.6,
       ease: "power2.inOut"
     });
 
     // 4. Background slides up/fades out to reveal the site
     tl.to(containerRef.current, {
       yPercent: -100,
-      duration: 1.2,
+      duration: 0.8,
       ease: "power3.inOut",
     });
 

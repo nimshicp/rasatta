@@ -15,9 +15,7 @@ export function Navbar({ theme = "dark" }: NavbarProps) {
   return (
     <div className={`relative z-30 flex justify-between items-center w-full ${textColor}`}>
       {/* Logo */}
-      <Link href="/" className="text-2xl font-bold tracking-tighter cursor-pointer">
-        RASATTA
-      </Link>
+      <Link href="/" className="text-2xl font-bold tracking-tighter cursor-pointer">RASATTA</Link>
 
       {/* Center Links (Hidden on Mobile) */}
       <div className={`hidden lg:flex items-center gap-8 text-[15px] font-medium ${textMuted}`}>

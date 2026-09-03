@@ -7,7 +7,11 @@ import { useGSAP } from "@gsap/react";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export function Footer() {
+interface FooterProps {
+  hideCta?: boolean;
+}
+
+export function Footer({ hideCta = false }: FooterProps) {
   const containerRef = useRef<HTMLElement>(null);
   const ctaContentRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +32,7 @@ export function Footer() {
   return (
     <>
       {/* Final CTA Section */}
+      {!hideCta && (
       <section ref={containerRef} className="py-32 px-6 md:px-12 lg:px-24 bg-white text-black text-center relative overflow-hidden">
         <div ref={ctaContentRef} className="max-w-4xl mx-auto relative z-10">
           <h2 className="text-5xl md:text-7xl font-medium tracking-tight mb-8">
@@ -53,6 +58,7 @@ export function Footer() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-gradient-to-tr from-gray-200 to-gray-50 rounded-full blur-[100px]" />
         </div>
       </section>
+      )}
 
       {/* Main Footer */}
       <footer className="bg-black text-white pt-24 pb-12 px-6 md:px-12 lg:px-24 border-t border-white/20">
@@ -114,7 +120,6 @@ export function Footer() {
 
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-gray-500 text-sm gap-4">
             <p>© {new Date().getFullYear()} Rasatta — All Rights Reserved</p>
-            <p>Theme: Black and White (Monochrome)</p>
           </div>
 
         </div>
