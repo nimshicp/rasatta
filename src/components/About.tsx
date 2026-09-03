@@ -28,24 +28,53 @@ export function About() {
   }, { scope: containerRef });
 
   return (
-    <section id="about" className="py-40 px-6 md:px-12 lg:px-24 bg-black border-t border-white/5" ref={containerRef}>
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 md:gap-24" ref={textRef}>
+    <section id="about" className="py-40 px-6 md:px-12 lg:px-24 bg-[#050505] border-t border-white/5 relative overflow-hidden" ref={containerRef}>
+
+      {/* Grid Pattern Background */}
+      <div className="absolute inset-0 pointer-events-none">
+        
+        {/* The Grid */}
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{ 
+            backgroundImage: `
+              linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px)
+            `, 
+            backgroundSize: '40px 40px' 
+          }} 
+        />
+
+        {/* Subtle Noise Texture for premium film feel - HIDDEN ON MOBILE FOR PERFORMANCE */}
+        <svg className="absolute inset-0 w-full h-full opacity-20 mix-blend-overlay hidden md:block">
+          <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+        </svg>
+
+        {/* Subtle radial mask so the grid fades out at the edges smoothly */}
+        <div className="absolute inset-0 bg-black/60 [mask-image:radial-gradient(ellipse_at_center,transparent_10%,black_100%)]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 md:gap-24 relative z-10" ref={textRef}>
 
         {/* Left Column - Sticky Heading */}
-        <div className="md:w-1/3">
+        <div className="md:w-2/5">
           <div className="sticky top-32">
-            <h2 className="reveal-text text-sm font-semibold tracking-widest text-gray-400 uppercase mb-4">
+            <h2 className="reveal-text text-[10px] font-bold tracking-widest text-gray-400 uppercase mb-8">
               About Rasatta
             </h2>
-            <h3 className="reveal-text text-3xl md:text-5xl font-medium tracking-tight leading-tight">
-              We Build Brands with <br />
-              <span className="text-gray-500">Purpose & Precision</span>
+            <h3 className="reveal-text text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.1]">
+              We Build Brands<br />
+              with<br />
+              <span className="text-gray-500">Purpose &<br />Precision</span>
             </h3>
           </div>
         </div>
 
         {/* Right Column - Text Content */}
-        <div className="md:w-2/3 flex flex-col gap-8 text-lg md:text-2xl text-gray-300 leading-relaxed font-light">
+        <div className="md:w-3/5 flex flex-col gap-6 text-base md:text-lg text-gray-300 leading-relaxed font-light">
           <p className="reveal-text">
             At Rasatta, creativity meets strategy. We partner with ambitious brands and individuals to elevate their identity, amplify their voice, and create experiences that people remember.
           </p>

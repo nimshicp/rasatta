@@ -17,62 +17,87 @@ export function Portfolio() {
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "+=200%",
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-      }
+    let mm = gsap.matchMedia();
+
+    // Desktop Animation (min-width: 768px)
+    mm.add("(min-width: 768px)", () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=200%",
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+        }
+      });
+
+      // 1. Initial State: Perfectly centered card within the viewport bounds
+      gsap.set(heroWrapperRef.current, {
+        width: "95vw",
+        height: "90vh",
+        borderRadius: "32px",
+      });
+
+      // Side cards start slightly scaled down and hidden
+      gsap.set([leftColRef.current, rightColRef.current], {
+        opacity: 0,
+        scale: 0.9,
+      });
+
+      // Bottom card starts hidden below
+      gsap.set(bottomImageRef.current, {
+        opacity: 0,
+        y: 15,
+      });
+
+      // 2. Scroll Timeline Sequence
+      tl.to(heroWrapperRef.current, {
+        width: "100%",
+        height: "calc(65% - 1rem)",
+        borderRadius: "16px",
+        ease: "power2.inOut",
+        duration: 2,
+      }, 0);
+
+      tl.to([leftColRef.current, rightColRef.current], {
+        opacity: 1,
+        scale: 1,
+        ease: "power2.out",
+        duration: 1.5,
+      }, 0.2);
+
+      tl.to(bottomImageRef.current, {
+        opacity: 1,
+        y: 0,
+        ease: "power2.out",
+        duration: 1.2,
+      }, 0.4);
     });
 
-    // 1. Initial State: Perfectly centered card within the viewport bounds
-    gsap.set(heroWrapperRef.current, {
-      width: "95vw",
-      height: "90vh",
-      borderRadius: "32px", // Slightly larger border radius for the huge card
+    // Mobile Animation (max-width: 767px)
+    mm.add("(max-width: 767px)", () => {
+      // Just set normal size for mobile and don't pin
+      gsap.set(heroWrapperRef.current, {
+        width: "100%",
+        height: "70vh",
+        borderRadius: "24px",
+      });
+
+      gsap.from(heroWrapperRef.current, {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 70%",
+          end: "top 30%",
+          scrub: 1,
+        },
+        scale: 0.9,
+        opacity: 0.5,
+        borderRadius: "32px",
+      });
     });
 
-    // Side cards start slightly scaled down and hidden
-    gsap.set([leftColRef.current, rightColRef.current], {
-      opacity: 0,
-      scale: 0.9,
-    });
-
-    // Bottom card starts hidden below
-    gsap.set(bottomImageRef.current, {
-      opacity: 0,
-      y: 15,
-    });
-
-    // 2. Scroll Timeline Sequence
-    // Shrink the hero container smoothly into its exact grid slot proportions
-    tl.to(heroWrapperRef.current, {
-      width: "100%",
-      height: "calc(65% - 1rem)",
-      borderRadius: "16px",
-      ease: "power2.inOut",
-      duration: 2,
-    }, 0);
-
-    // Fade and scale in side columns to reveal the outer grid bounds
-    tl.to([leftColRef.current, rightColRef.current], {
-      opacity: 1,
-      scale: 1,
-      ease: "power2.out",
-      duration: 1.5,
-    }, 0.2);
-
-    // Fade and slide in the bottom slot image
-    tl.to(bottomImageRef.current, {
-      opacity: 1,
-      y: 0,
-      ease: "power2.out",
-      duration: 1.2,
-    }, 0.4);
-
+    return () => mm.revert(); // Cleanup matchMedia
   }, { scope: containerRef });
 
   return (
@@ -90,7 +115,7 @@ export function Portfolio() {
 
         {/* Center Column (Hero Card + Bottom Card Stack) */}
         <div className="relative w-full h-full z-20">
-          
+
           {/* Main Hero Card - Absolutely positioned so it can break out of the grid bounds during its large initial state! */}
           <div
             ref={heroWrapperRef}

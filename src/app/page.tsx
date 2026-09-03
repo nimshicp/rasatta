@@ -14,10 +14,12 @@ import { WhyUs } from "@/components/WhyUs";
 import { Testimonials } from "@/components/Testimonials";
 import { Footer } from "@/components/Footer";
 
+import { Team } from "@/components/Team";
+
 export default function Home() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, useGSAP);
-    
+
     // Refresh ScrollTrigger after dynamic content loads to ensure correct measurements
     ScrollTrigger.refresh();
   }, []);
@@ -25,7 +27,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col w-full bg-black text-white relative">
       <Intro />
-      
+
       {/* 
         The top sequence (Hero -> Portfolio) is tightly coupled.
         We wrap them in a master container to orchestrate their overlapping animation.
@@ -39,10 +41,11 @@ export default function Home() {
         <About />
         <Services />
         <WhyUs />
+        <Team />
         <Testimonials />
         <Footer />
       </div>
-      
+
     </main>
   );
 }
