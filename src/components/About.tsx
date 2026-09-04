@@ -28,7 +28,7 @@ export function About() {
   }, { scope: containerRef });
 
   return (
-    <section id="about" className="py-40 px-6 md:px-12 lg:px-24 bg-[#050505] border-t border-white/5 relative overflow-hidden" ref={containerRef}>
+    <section id="about" className="pt-24 pb-12 md:pt-40 md:pb-12 px-6 md:px-12 lg:px-24 bg-[#050505] border-t border-white/5 relative z-20 overflow-hidden" ref={containerRef}>
 
       {/* Grid Pattern Background */}
       <div className="absolute inset-0 pointer-events-none">

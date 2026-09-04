@@ -75,7 +75,7 @@ export function Services() {
     <section ref={sectionRef} className="bg-black w-full text-black relative z-0" id="expertise">
 
       {/* --- Intro Area (Black Background, White Text) --- */}
-      <div ref={introRef} className="pt-32 pb-16 flex flex-col justify-center px-6 md:px-12 lg:px-24">
+      <div ref={introRef} className="pt-16 pb-8 md:pt-32 md:pb-16 flex flex-col justify-center px-6 md:px-12 lg:px-24">
         <h2 className="text-white text-6xl md:text-[8rem] font-bold tracking-tighter mb-4 leading-[0.9]">
           Solutions.
         </h2>

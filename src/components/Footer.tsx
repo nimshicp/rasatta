@@ -18,6 +18,8 @@ export function Footer({ hideCta = false }: FooterProps) {
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    if (!containerRef.current || !ctaContentRef.current) return;
+
     ScrollTrigger.create({
       trigger: containerRef.current,
       start: "top 70%",
@@ -27,7 +29,7 @@ export function Footer({ hideCta = false }: FooterProps) {
       )
     });
 
-  }, { scope: containerRef });
+  }, { scope: containerRef, dependencies: [hideCta] });
 
   return (
     <>

@@ -56,29 +56,14 @@ export function Team() {
       });
     });
 
-    // --- Smooth background & text color fade transition from Light to Dark ---
-    gsap.fromTo(containerRef.current,
-      { backgroundColor: "#f8f8f8", color: "#000000" },
-      {
-        backgroundColor: "#0a0a0a",
-        color: "#ffffff",
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top bottom", // Starts when top of Team hits bottom of viewport
-          end: "top 30%",      // Completes transition as it scrolls up
-          scrub: true,
-        }
-      }
-    );
+    // Removed background color transition as it now sits under the dark About section
 
   }, { scope: containerRef });
 
   return (
     <section
       id="team"
-      // Starts light (#f8f8f8) to match the end of WhyUs, GSAP scrubs it to dark (#0a0a0a)
-      className="pt-32 pb-16 px-6 md:px-12 lg:px-24 relative z-20 bg-[#f8f8f8] text-black"
+      className="pt-4 md:pt-8 pb-16 px-6 md:px-12 lg:px-24 relative z-20 bg-[#050505] text-white"
       ref={containerRef}
     >
       <div className="max-w-6xl mx-auto">

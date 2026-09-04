@@ -77,39 +77,22 @@ export function Portfolio() {
 
     // Mobile Animation (max-width: 767px)
     mm.add("(max-width: 767px)", () => {
-      // Just set normal size for mobile and don't pin
-      gsap.set(heroWrapperRef.current, {
-        width: "100%",
-        height: "70vh",
-        borderRadius: "24px",
-      });
-
-      gsap.from(heroWrapperRef.current, {
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 70%",
-          end: "top 30%",
-          scrub: 1,
-        },
-        scale: 0.9,
-        opacity: 0.5,
-        borderRadius: "32px",
-      });
+      // No GSAP animation needed on mobile since we just show a static video
     });
 
     return () => mm.revert(); // Cleanup matchMedia
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="h-screen w-screen bg-black overflow-hidden flex flex-col justify-center items-center p-4 md:p-6">
+    <div ref={containerRef} className="h-screen w-screen bg-black overflow-hidden flex flex-col justify-center items-center p-0 md:p-6">
 
-      {/* Viewport-locked 3-Column Grid Container */}
-      <div className="w-full max-w-[82rem] h-[85vh] grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch justify-center">
+      {/* Desktop Viewport-locked 3-Column Grid Container */}
+      <div className="hidden md:grid w-full max-w-[82rem] h-[85vh] grid-cols-3 gap-4 items-stretch justify-center">
 
         {/* Left Column Card */}
         <div
           ref={leftColRef}
-          className="hidden md:flex flex-col h-full rounded-2xl overflow-hidden brightness-[0.35] hover:brightness-100 transition-all duration-500 bg-cover bg-center shadow-2xl"
+          className="flex flex-col h-full rounded-2xl overflow-hidden brightness-[0.35] hover:brightness-100 transition-all duration-500 bg-cover bg-center shadow-2xl"
           style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)' }}
         />
 
@@ -129,7 +112,7 @@ export function Portfolio() {
           {/* Bottom Grid Card */}
           <div
             ref={bottomImageRef}
-            className="absolute bottom-0 left-0 w-full h-[35%] rounded-2xl overflow-hidden brightness-[0.35] hover:brightness-100 transition-all duration-500 bg-cover bg-center hidden md:block shadow-2xl"
+            className="absolute bottom-0 left-0 w-full h-[35%] rounded-2xl overflow-hidden brightness-[0.35] hover:brightness-100 transition-all duration-500 bg-cover bg-center shadow-2xl"
             style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=2000&auto=format&fit=crop)' }}
           />
         </div>
@@ -137,10 +120,24 @@ export function Portfolio() {
         {/* Right Column Card */}
         <div
           ref={rightColRef}
-          className="hidden md:flex flex-col h-full rounded-2xl overflow-hidden brightness-[0.35] hover:brightness-100 transition-all duration-500 bg-cover bg-center shadow-2xl"
+          className="flex flex-col h-full rounded-2xl overflow-hidden brightness-[0.35] hover:brightness-100 transition-all duration-500 bg-cover bg-center shadow-2xl"
           style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop)' }}
         />
 
+      </div>
+
+      {/* Mobile-only Full Video Container */}
+      <div className="block md:hidden w-full h-full relative">
+        <video
+          className="absolute inset-0 w-full h-full object-cover opacity-90"
+          autoPlay
+          muted
+          loop
+          playsInline
+          src="/WhatsApp Video 2026-09-03 at 1.01.18 PM.mp4 (1).mp4"
+        />
+        {/* Subtle gradient so it blends nicely into the black sections around it */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
       </div>
     </div>
   );

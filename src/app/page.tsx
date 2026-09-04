@@ -11,10 +11,12 @@ import { Portfolio } from "@/components/Portfolio";
 import { About } from "@/components/About";
 import { Services } from "@/components/Services";
 import { WhyUs } from "@/components/WhyUs";
+import { Showcase } from "@/components/Showcase";
 import { Testimonials } from "@/components/Testimonials";
 import { Footer } from "@/components/Footer";
 
 import { Team } from "@/components/Team";
+import { Contact } from "@/components/Contact";
 
 export default function Home() {
   useEffect(() => {
@@ -39,11 +41,13 @@ export default function Home() {
 
       <div className="relative z-20 bg-black">
         <About />
+        <Team />
         <Services />
         <WhyUs />
-        <Team />
+        <Showcase />
         <Testimonials />
-        <Footer />
+        <Contact />
+        <Footer hideCta />
       </div>
 
     </main>

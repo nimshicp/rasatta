@@ -34,11 +34,11 @@ export function Navbar({ theme = "dark" }: NavbarProps) {
 
         {/* Center Links (Hidden on Mobile) */}
         <div className={`hidden lg:flex items-center gap-8 text-[15px] font-medium ${textMuted}`}>
-          <Link href="/work" className={`cursor-pointer transition-colors ${hoverColor}`}>Work</Link>
-          <span className={`cursor-pointer transition-colors ${hoverColor}`}>Solutions</span>
-          <span className={`cursor-pointer transition-colors ${hoverColor}`}>Approach</span>
-          <span className={`cursor-pointer transition-colors ${hoverColor}`}>Company</span>
-          <span className={`cursor-pointer transition-colors ${hoverColor}`}>Careers</span>
+          <Link href="/#work" className={`cursor-pointer transition-colors ${hoverColor}`}>Work</Link>
+          <Link href="/#expertise" className={`cursor-pointer transition-colors ${hoverColor}`}>Solutions</Link>
+          <Link href="/#about" className={`cursor-pointer transition-colors ${hoverColor}`}>About</Link>
+          <Link href="/#team" className={`cursor-pointer transition-colors ${hoverColor}`}>Careers</Link>
+          <Link href="/#contact" className={`cursor-pointer transition-colors ${hoverColor}`}>Contact</Link>
         </div>
 
         {/* CTA Button & Mobile Toggle */}
@@ -64,11 +64,12 @@ export function Navbar({ theme = "dark" }: NavbarProps) {
         }`}
       >
         <div className="flex flex-col items-center gap-8 text-3xl font-medium text-white/80">
-          <Link href="/work" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Work</Link>
-          <span onClick={() => setIsOpen(false)} className="hover:text-white transition-colors cursor-pointer">Solutions</span>
-          <span onClick={() => setIsOpen(false)} className="hover:text-white transition-colors cursor-pointer">Approach</span>
-          <span onClick={() => setIsOpen(false)} className="hover:text-white transition-colors cursor-pointer">Company</span>
-          <span onClick={() => setIsOpen(false)} className="hover:text-white transition-colors cursor-pointer">Careers</span>
+          <Link href="/#work" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Work</Link>
+          <Link href="/#expertise" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Solutions</Link>
+          <Link href="/#why-us" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Approach</Link>
+          <Link href="/#about" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">About</Link>
+          <Link href="/#team" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Careers</Link>
+          <Link href="/#contact" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Contact</Link>
         </div>
         
         <button className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold tracking-tight mt-8">
