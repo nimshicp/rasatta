@@ -18,6 +18,8 @@ import { Footer } from "@/components/Footer";
 import { Team } from "@/components/Team";
 import { Contact } from "@/components/Contact";
 
+import { Navbar } from "@/components/Navbar";
+
 export default function Home() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -28,6 +30,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col w-full bg-black text-white relative">
+      <Navbar />
       <Intro />
 
       {/* 

@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowDown } from "lucide-react";
 import { Navbar } from "./Navbar";
+import Link from "next/link";
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -79,7 +80,7 @@ export function Hero() {
           ref={mediaContainerRef}
           className="absolute inset-0 z-0 bg-black overflow-hidden origin-center"
         >
-          <div ref={mediaInnerRef} className="absolute inset-0 flex flex-col justify-between p-6 pt-4 md:px-12 md:py-8 lg:px-24 lg:py-8">
+          <div ref={mediaInnerRef} className="absolute inset-0 flex flex-col justify-end p-6 pt-4 md:px-12 md:py-8 lg:px-24 lg:py-8">
 
             {/* The actual video */}
             <video
@@ -93,9 +94,6 @@ export function Hero() {
 
             {/* Dark overlay specifically for the video so text is readable */}
             <div className="absolute inset-0 bg-black/30 pointer-events-none" />
-
-            {/* Top Navigation inside Media (Minimal & Transparent) */}
-            <Navbar />
 
             {/* Bottom indicator inside Media */}
             <div className="relative z-30 flex justify-between items-end w-full pb-8">
@@ -132,12 +130,12 @@ export function Hero() {
             We help businesses and individuals stand out with strategic storytelling, design clarity, and content that creates measurable impact.
           </div>
           <div ref={ctaRef} className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <button className="bg-white text-black px-8 py-4 rounded-full text-sm font-semibold tracking-wide uppercase transition-transform hover:scale-105">
+            <a href="tel:9745647655" className="bg-white text-black px-8 py-4 rounded-full text-sm font-semibold tracking-wide uppercase transition-transform hover:scale-105 inline-block text-center">
               Book a Strategy Call
-            </button>
-            <button className="bg-transparent border border-gray-600 text-white px-8 py-4 rounded-full text-sm font-semibold tracking-wide uppercase transition-all hover:bg-white/10 hover:border-gray-400">
+            </a>
+            <Link href="/#work" className="bg-transparent border border-gray-600 text-white px-8 py-4 rounded-full text-sm font-semibold tracking-wide uppercase transition-all hover:bg-white/10 hover:border-gray-400">
               View Our Work
-            </button>
+            </Link>
           </div>
         </div>
       </div>
