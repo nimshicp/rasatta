@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { X, Play, ArrowRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { X, Play, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 // Mock data based on the screenshot aesthetic
 const showcaseWorks = [
@@ -65,6 +65,49 @@ export function Showcase() {
   // Mobile active card
   const [activeWorkId, setActiveWorkId] = useState<number | null>(null);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isInteracting = useRef(false);
+
+  useEffect(() => {
+    let animationId: number;
+    let lastTime = performance.now();
+    let speed = 0.05; // pixels per ms
+
+    const scroll = (time: number) => {
+      const delta = time - lastTime;
+      lastTime = time;
+
+      if (scrollRef.current) {
+        const isPaused = activeWorkId !== null || selectedWork !== null || isInteracting.current;
+        if (!isPaused) {
+          scrollRef.current.scrollLeft += speed * delta;
+          
+          const third = scrollRef.current.scrollWidth / 3;
+          if (scrollRef.current.scrollLeft >= third * 2) {
+            scrollRef.current.scrollLeft -= third;
+          } else if (scrollRef.current.scrollLeft <= 0) {
+            scrollRef.current.scrollLeft += third;
+          }
+        }
+      }
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    animationId = requestAnimationFrame(scroll);
+    return () => cancelAnimationFrame(animationId);
+  }, [activeWorkId, selectedWork]);
+
+  const handleManualScroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      isInteracting.current = true;
+      const scrollAmount = window.innerWidth < 768 ? 300 : 380;
+      scrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+      setTimeout(() => {
+        isInteracting.current = false;
+      }, 600);
+    }
+  };
+
   // We duplicate the array to create a seamless infinite scroll effect
   const marqueeItems = [
     ...showcaseWorks,
@@ -100,34 +143,16 @@ export function Showcase() {
 
   return (
     <section className="py-24 bg-[#0a0a0a] overflow-hidden relative">
-      {/* Inline styles for the infinite marquee animation */}
+      {/* Inline styles for hidden scrollbar */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            @keyframes scroll {
-              0% {
-                transform: translateX(0);
-              }
-
-              100% {
-                transform: translateX(-33.3333%);
-              }
+            .hide-scrollbar::-webkit-scrollbar {
+              display: none;
             }
-
-            .marquee-track {
-              display: flex;
-              width: max-content;
-              animation: scroll 40s linear infinite;
-            }
-
-            .marquee-track:hover {
-              animation-play-state: paused;
-            }
-
-            @media (max-width: 767px) {
-              .marquee-track.mobile-paused {
-                animation-play-state: paused;
-              }
+            .hide-scrollbar {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
             }
           `,
         }}
@@ -149,11 +174,29 @@ export function Showcase() {
       </div>
 
       {/* Infinite Scrolling Marquee Container */}
-      <div className="relative w-full">
+      <div className="relative w-full group/carousel">
+        
+        {/* Navigation Arrows */}
+        <button 
+          onClick={() => handleManualScroll("left")}
+          className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-black/40 hover:bg-white/20 backdrop-blur-md border border-white/10 md:border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white transition-all opacity-100 md:opacity-0 md:group-hover/carousel:opacity-100 cursor-pointer outline-none"
+        >
+          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+        </button>
+        <button 
+          onClick={() => handleManualScroll("right")}
+          className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 bg-black/40 hover:bg-white/20 backdrop-blur-md border border-white/10 md:border-white/20 rounded-full flex items-center justify-center text-white/80 hover:text-white transition-all opacity-100 md:opacity-0 md:group-hover/carousel:opacity-100 cursor-pointer outline-none"
+        >
+          <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+        </button>
+
         <div
-          className={`marquee-track gap-6 px-6 ${
-            activeWorkId !== null ? "mobile-paused" : ""
-          }`}
+          ref={scrollRef}
+          onMouseEnter={() => (isInteracting.current = true)}
+          onMouseLeave={() => (isInteracting.current = false)}
+          onTouchStart={() => (isInteracting.current = true)}
+          onTouchEnd={() => setTimeout(() => (isInteracting.current = false), 1000)}
+          className="flex gap-6 px-6 overflow-x-auto hide-scrollbar w-full"
         >
           {marqueeItems.map((work, index) => {
             const isActive = activeWorkId === work.id;
@@ -174,7 +217,7 @@ export function Showcase() {
                     isActive
                       ? "scale-110"
                       : "scale-100"
-                  } md:group-hover:scale-110`}
+                  } group-hover:scale-110`}
                   style={{
                     backgroundImage: `url(${work.image})`,
                   }}
@@ -186,7 +229,7 @@ export function Showcase() {
                     isActive
                       ? "bg-black/40"
                       : "bg-black/20"
-                  } md:group-hover:bg-black/40`}
+                  } group-hover:bg-black/40`}
                 />
 
                 {/* Gradient */}
@@ -199,7 +242,7 @@ export function Showcase() {
                       isActive
                         ? "translate-y-0"
                         : "translate-y-4"
-                    } md:group-hover:translate-y-0`}
+                    } group-hover:translate-y-0`}
                   >
                     <span className="text-[#ea580c] text-xs font-bold tracking-widest uppercase mb-2 block">
                       {work.category}
@@ -215,7 +258,7 @@ export function Showcase() {
                         isActive
                           ? "opacity-100"
                           : "opacity-0"
-                      } md:group-hover:opacity-100`}
+                      } group-hover:opacity-100`}
                     >
                       {work.description}
                     </p>
@@ -226,26 +269,38 @@ export function Showcase() {
                         isActive
                           ? "opacity-100"
                           : "opacity-0"
-                      } md:group-hover:opacity-100`}
+                      } group-hover:opacity-100`}
                     >
-                      <span className="inline-flex items-center gap-2 border border-white/50 hover:border-white hover:bg-white hover:text-black text-white text-[11px] font-bold tracking-wider uppercase px-6 py-2.5 rounded-full transition-all duration-300">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const foundWork = showcaseWorks.find((w) => w.id === work.id);
+                          if (foundWork) setSelectedWork(foundWork);
+                        }}
+                        className="inline-flex items-center gap-2 border border-white/50 hover:border-white hover:bg-white hover:text-black text-white text-[11px] font-bold tracking-wider uppercase px-6 py-2.5 rounded-full transition-all duration-300"
+                      >
                         VIEW CASE STUDY
                         <ArrowRight className="w-3.5 h-3.5" />
-                      </span>
+                      </button>
                     </div>
                   </div>
                 </div>
 
                 {/* Play Button */}
-                <div
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const foundWork = showcaseWorks.find((w) => w.id === work.id);
+                    if (foundWork) setSelectedWork(foundWork);
+                  }}
                   className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center transition-all duration-300 ${
                     isActive
                       ? "opacity-100 scale-110"
                       : "opacity-0 scale-100"
-                  } md:group-hover:opacity-100 md:group-hover:scale-110`}
+                  } group-hover:opacity-100 group-hover:scale-110`}
                 >
                   <Play className="w-6 h-6 text-white ml-1" />
-                </div>
+                </button>
               </div>
             );
           })}
