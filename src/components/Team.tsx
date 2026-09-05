@@ -87,7 +87,9 @@ export function Team() {
             <div
               key={index}
               ref={el => { if (el) cardsRef.current[index] = el; }}
-              className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer shadow-lg"
+              className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer shadow-lg outline-none"
+              onClick={() => {}}
+              tabIndex={0}
             >
               {/* Image */}
               <div className="absolute inset-0 w-full h-full bg-neutral-800">
