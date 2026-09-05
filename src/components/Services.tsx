@@ -95,33 +95,44 @@ export function Services() {
         stagger: 0.1,
       });
 
-      // --- Mobile Carousel Scroll Scrubbing ---
+      // --- Mobile Sequence: Carousel Scrubbing followed by Curtain Slide ---
       let mm = gsap.matchMedia();
 
       mm.add("(max-width: 767px)", () => {
-        if (mobileContainerRef.current) {
-          ScrollTrigger.create({
-            trigger: mobileContainerRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true,
-            // NO PIN: We use native CSS position: sticky to avoid GSAP nested pin conflicts!
-            onUpdate: (self) => {
-              if (carouselRef.current && carouselRef.current.setProgress) {
-                carouselRef.current.setProgress(self.progress);
-              }
-            },
-          });
-        }
+        // Step 1: Pin the section and scrub the carousel
+        let scrubTrigger = ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "bottom bottom", // Pins when the carousel is fully in view
+          end: "+=300%",
+          pin: true,
+          pinSpacing: true, // Pushes next section down while scrubbing
+          scrub: true,
+          onUpdate: (self) => {
+            if (carouselRef.current && carouselRef.current.setProgress) {
+              carouselRef.current.setProgress(self.progress);
+            }
+          },
+        });
+
+        // Step 2: Pin again for the Curtain Slide effect
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: () => scrubTrigger.end, // Starts exactly when the scrub ends!
+          end: "+=100%",
+          pin: true,
+          pinSpacing: false, // Next section slides over
+        });
       });
 
-      // --- Pin Section for Curtain Slide Effect (All screen sizes) ---
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "bottom bottom",
-        end: "+=100%",
-        pin: true,
-        pinSpacing: false,
+      // --- Desktop Only: Pin Section for Curtain Slide Effect ---
+      mm.add("(min-width: 768px)", () => {
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "bottom bottom",
+          end: "+=100%",
+          pin: true,
+          pinSpacing: false,
+        });
       });
     },
     { scope: sectionRef }
@@ -163,13 +174,12 @@ export function Services() {
         </p>
       </div>
 
-      {/* --- Mobile View: DepthCarousel (Native CSS Sticky) --- */}
+      {/* --- Mobile View: DepthCarousel --- */}
       <div 
         ref={mobileContainerRef} 
-        className="block md:hidden w-full relative -mt-8" 
-        style={{ height: "400vh" }}
+        className="block md:hidden w-full relative -mt-8"
       >
-        <div className="sticky top-0 w-full h-[100vh] max-h-[800px] flex items-center justify-center overflow-hidden">
+        <div className="w-full h-[100vh] max-h-[800px] flex items-center justify-center overflow-hidden">
           <DepthCarousel
             ref={carouselRef}
             items={services.map((service) => ({
