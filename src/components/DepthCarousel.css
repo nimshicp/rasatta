@@ -8,7 +8,7 @@
   justify-content: center;
   perspective: var(--dc-perspective, 1400px);
   perspective-origin: 50% 50%;
-  touch-action: none;
+  touch-action: pan-y;
   user-select: none;
 }
 .depth-carousel:focus-visible {
