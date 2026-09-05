@@ -61,7 +61,7 @@ export function WhyUs() {
   return (
     <section
       id="why-us"
-      className="py-32 px-6 md:px-12 lg:px-24 bg-[#f8f8f8] text-black relative z-10 shadow-[0_-30px_60px_rgba(0,0,0,0.6)] overflow-hidden"
+      className="py-32 px-6 md:px-12 lg:px-24 bg-[linear-gradient(#f8f8f8,#f8f8f8)] text-black relative z-10 shadow-[0_-30px_60px_rgba(0,0,0,0.6)] overflow-hidden"
       ref={containerRef}
     >
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 relative z-10">

@@ -70,7 +70,7 @@ export function Contact() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="contact" className="relative bg-[#fafafa] pt-32 pb-20 px-6 md:px-12 lg:px-24 min-h-screen flex flex-col justify-center text-[#111111] overflow-hidden">
+    <section ref={containerRef} id="contact" className="relative bg-[linear-gradient(#fafafa,#fafafa)] pt-32 pb-20 px-6 md:px-12 lg:px-24 min-h-screen flex flex-col justify-center text-[#111111] overflow-hidden">
 
       {/* Ambient Premium Glows for Depth */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[40vw] h-[40vw] bg-black/5 rounded-full blur-[120px] pointer-events-none" />
