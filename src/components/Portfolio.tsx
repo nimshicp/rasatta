@@ -126,18 +126,37 @@ export function Portfolio() {
 
       </div>
 
-      {/* Mobile-only Full Video Container */}
-      <div className="block md:hidden w-full h-full relative">
-        <video
-          className="absolute inset-0 w-full h-full object-cover opacity-90"
-          autoPlay
-          muted
-          loop
-          playsInline
-          src="/WhatsApp Video 2026-09-03 at 1.01.18 PM.mp4 (1).mp4"
-        />
+      {/* Mobile-only Infinite Marquee Container */}
+      <div className="flex md:hidden w-full h-full relative overflow-hidden gap-4 p-4">
+        
+        {/* Left Column (Scrolling UP) */}
+        <div className="w-1/2 flex flex-col gap-4 animate-marquee-up relative h-max">
+          {/* First set of images */}
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-square rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=2000&auto=format&fit=crop)' }} />
+          
+          {/* Duplicate set for seamless infinite loop */}
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-square rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=2000&auto=format&fit=crop)' }} />
+        </div>
+
+        {/* Right Column (Scrolling DOWN) */}
+        <div className="w-1/2 flex flex-col gap-4 animate-marquee-down relative h-max">
+          {/* First set of images */}
+          <div className="w-full aspect-square rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2000&auto=format&fit=crop)' }} />
+          
+          {/* Duplicate set for seamless infinite loop */}
+          <div className="w-full aspect-square rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)' }} />
+          <div className="w-full aspect-[4/5] rounded-xl bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=2000&auto=format&fit=crop)' }} />
+        </div>
+
         {/* Subtle gradient so it blends nicely into the black sections around it */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none z-10" />
       </div>
     </div>
   );

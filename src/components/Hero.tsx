@@ -114,7 +114,7 @@ export function Hero() {
       {/* Solid black text container so no video shows behind the text itself */}
       <div
         ref={textContainerRef}
-        className="relative z-10 w-full flex flex-col justify-center px-6 md:px-12 lg:px-24 bg-black pb-32 pt-4"
+        className="relative z-10 w-full flex flex-col justify-center px-6 md:px-12 lg:px-24 bg-black pb-32 pt-4 min-h-[60vh]"
       >
         <div className="max-w-5xl flex flex-col">
           <div ref={line1Ref} className="text-3xl md:text-5xl lg:text-[4rem] font-medium leading-none tracking-tight text-white pb-1">
