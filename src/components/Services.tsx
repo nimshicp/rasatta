@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import DepthCarousel from "./DepthCarousel";
+
 const services = [
   {
     id: "01",
@@ -76,14 +77,18 @@ export function Services() {
   const carouselRef = useRef<any>(null);
   const mobileContainerRef = useRef<HTMLDivElement>(null);
 
-  // Mobile active service card
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
   useGSAP(
     () => {
       gsap.registerPlugin(ScrollTrigger);
 
-      // --- Text Reveal Animation ---
+      /*
+       * ============================================================
+       * TEXT REVEAL
+       * ============================================================
+       */
+
       gsap.to(wordsRef.current, {
         scrollTrigger: {
           trigger: introRef.current,
@@ -95,48 +100,138 @@ export function Services() {
         stagger: 0.1,
       });
 
-      // --- Mobile Sequence: Carousel Scrubbing followed by Curtain Slide ---
-      let mm = gsap.matchMedia();
+      /*
+       * ============================================================
+       * MOBILE ONLY
+       *
+       * Sequence:
+       *
+       * CARD 01
+       *    ↓
+       * CARD 02
+       *    ↓
+       * CARD 03
+       *    ↓
+       * CARD 04
+       *    ↓
+       * NEXT SECTION
+       *
+       * The carousel is pinned while the page scroll controls
+       * its progress.
+       * ============================================================
+       */
+
+      const mm = gsap.matchMedia();
 
       mm.add("(max-width: 767px)", () => {
-        // Step 1: Pin the section and scrub the carousel
-        let scrubTrigger = ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: "bottom bottom", // Pins when the carousel is fully in view
-          end: "+=300%",
+        const carouselContainer = mobileContainerRef.current;
+
+        if (!carouselContainer) return;
+
+        const totalTransitions = services.length - 1;
+
+        const mobileScrollTrigger = ScrollTrigger.create({
+          trigger: carouselContainer,
+
+          /*
+           * The carousel becomes pinned when it reaches
+           * the top of the viewport.
+           */
+          start: "top top",
+
+          /*
+           * 4 cards = 3 transitions.
+           *
+           * Each viewport of scrolling advances roughly
+           * one card.
+           */
+          end: () =>
+            `+=${window.innerHeight * totalTransitions}`,
+
           pin: true,
-          pinSpacing: true, // Pushes next section down while scrubbing
-          scrub: true,
+
+          /*
+           * Keep space in the document for the pinned
+           * carousel so the next section cannot jump upward.
+           */
+          pinSpacing: true,
+
+          /*
+           * Smoothly connect scroll position to carousel
+           * position.
+           */
+          scrub: 1,
+
+          anticipatePin: 1,
+
+          invalidateOnRefresh: true,
+
           onUpdate: (self) => {
-            if (carouselRef.current && carouselRef.current.setProgress) {
+            /*
+             * self.progress:
+             *
+             * 0     = CARD 01
+             * 0.333 = CARD 02
+             * 0.666 = CARD 03
+             * 1     = CARD 04
+             */
+            if (
+              carouselRef.current &&
+              typeof carouselRef.current.setProgress === "function"
+            ) {
+              carouselRef.current.setProgress(self.progress);
+            }
+          },
+
+          onRefresh: (self) => {
+            if (
+              carouselRef.current &&
+              typeof carouselRef.current.setProgress === "function"
+            ) {
               carouselRef.current.setProgress(self.progress);
             }
           },
         });
 
-        // Step 2: Pin again for the Curtain Slide effect
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: () => scrubTrigger.end, // Starts exactly when the scrub ends!
-          end: "+=100%",
-          pin: true,
-          pinSpacing: false, // Next section slides over
-        });
+        return () => {
+          mobileScrollTrigger.kill();
+        };
       });
 
-      // --- Desktop Only: Pin Section for Curtain Slide Effect ---
+      /*
+       * ============================================================
+       * DESKTOP ONLY
+       *
+       * Desktop remains the original pinned/curtain behavior.
+       * ============================================================
+       */
+
       mm.add("(min-width: 768px)", () => {
-        ScrollTrigger.create({
+        const desktopTrigger = ScrollTrigger.create({
           trigger: sectionRef.current,
           start: "bottom bottom",
           end: "+=100%",
           pin: true,
           pinSpacing: false,
         });
+
+        return () => {
+          desktopTrigger.kill();
+        };
       });
+
+      return () => {
+        mm.revert();
+      };
     },
     { scope: sectionRef }
   );
+
+  /*
+   * ============================================================
+   * DESKTOP CARD CLICK
+   * ============================================================
+   */
 
   const handleCardClick = (index: number) => {
     setActiveCard((current) => (current === index ? null : index));
@@ -148,25 +243,67 @@ export function Services() {
       className="bg-black w-full text-black relative z-0"
       id="expertise"
     >
-      {/* --- Intro Area --- */}
+      {/* ==========================================================
+          INTRO
+          ========================================================== */}
+
       <div
         ref={introRef}
-        className="pt-16 pb-2 md:pt-32 md:pb-16 flex flex-col justify-center px-6 md:px-12 lg:px-24"
+        className="
+          pt-16
+          pb-2
+          md:pt-32
+          md:pb-16
+          flex
+          flex-col
+          justify-center
+          px-6
+          md:px-12
+          lg:px-24
+        "
       >
-        <h2 className="text-white text-6xl md:text-[8rem] font-bold tracking-tighter mb-4 leading-[0.9]">
+        <h2
+          className="
+            text-white
+            text-6xl
+            md:text-[8rem]
+            font-bold
+            tracking-tighter
+            mb-4
+            leading-[0.9]
+          "
+        >
           Solutions.
         </h2>
 
-        <p className="text-xl md:text-3xl lg:text-4xl font-medium tracking-tight max-w-4xl leading-snug text-[#333333]">
+        <p
+          className="
+            text-xl
+            md:text-3xl
+            lg:text-4xl
+            font-medium
+            tracking-tight
+            max-w-4xl
+            leading-snug
+            text-[#333333]
+          "
+        >
           {`AI-native. Systems-driven. Expert-led. The capabilities that turn ideas into impact.`
             .split(" ")
             .map((word, i) => (
               <span
                 key={i}
                 ref={(el) => {
-                  if (el) wordsRef.current[i] = el;
+                  if (el) {
+                    wordsRef.current[i] = el;
+                  }
                 }}
-                className="mr-[0.3em] inline-block transition-colors duration-200"
+                className="
+                  mr-[0.3em]
+                  inline-block
+                  transition-colors
+                  duration-200
+                "
               >
                 {word}
               </span>
@@ -174,47 +311,182 @@ export function Services() {
         </p>
       </div>
 
-      {/* --- Mobile View: DepthCarousel --- */}
-      <div 
-        ref={mobileContainerRef} 
-        className="block md:hidden w-full relative -mt-8"
+      {/* ==========================================================
+          MOBILE DEPTH CAROUSEL
+          ========================================================== */}
+
+      <div
+        ref={mobileContainerRef}
+        className="
+          block
+          md:hidden
+          relative
+          w-full
+          h-screen
+          overflow-hidden
+          bg-black
+        "
       >
-        <div className="w-full h-[100vh] max-h-[800px] flex items-center justify-center overflow-hidden">
+        <div
+          className="
+            w-full
+            h-full
+            flex
+            items-center
+            justify-center
+            overflow-hidden
+          "
+        >
           <DepthCarousel
             ref={carouselRef}
             items={services.map((service) => ({
               content: (
-                <div className="w-full h-full relative bg-[#111111] flex flex-col justify-start overflow-hidden border border-white/10 text-left rounded-[24px]">
-                  {/* Background Image */}
-                  <div
-                    className="absolute inset-0 bg-cover bg-center opacity-60 pointer-events-none"
-                    style={{ backgroundImage: `url(${service.image})` }}
-                  />
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/80 to-black/20 pointer-events-none" />
+                <div
+                  className="
+                    relative
+                    w-full
+                    h-full
+                    overflow-hidden
+                    rounded-[24px]
+                    border
+                    border-white/10
+                    bg-[#111111]
+                    text-left
+                  "
+                >
+                  {/* ==================================================
+                      IMAGE
+                      ================================================== */}
 
-                  {/* Card Content */}
-                  <div className="relative p-8 flex flex-col h-full z-10">
-                    <span className="block font-mono text-2xl font-bold mb-4 tracking-tighter text-white">
+                  <div
+                    className="
+                      absolute
+                      inset-0
+                      bg-cover
+                      bg-center
+                      pointer-events-none
+                    "
+                    style={{
+                      backgroundImage: `url(${service.image})`,
+                    }}
+                  />
+
+                  {/* ==================================================
+                      DARK OVERLAY
+                      ================================================== */}
+
+                  <div
+                    className="
+                      absolute
+                      inset-0
+                      pointer-events-none
+                      bg-gradient-to-t
+                      from-[#050505]
+                      via-[#111111]/75
+                      to-black/20
+                    "
+                  />
+
+                  {/* ==================================================
+                      CARD CONTENT
+                      ================================================== */}
+
+                  <div
+                    className="
+                      relative
+                      z-10
+                      flex
+                      flex-col
+                      h-full
+                      p-8
+                    "
+                  >
+                    {/* NUMBER */}
+
+                    <span
+                      className="
+                        block
+                        font-mono
+                        text-2xl
+                        font-bold
+                        mb-6
+                        tracking-tighter
+                        text-white
+                      "
+                    >
                       {service.id}
                     </span>
-                    <h3 className="text-3xl font-bold tracking-tighter uppercase leading-[1.1] text-white mb-3">
+
+                    {/* TITLE */}
+
+                    <h3
+                      className="
+                        text-3xl
+                        font-bold
+                        tracking-tighter
+                        uppercase
+                        leading-[1.05]
+                        text-white
+                        mb-4
+                      "
+                    >
                       {service.title}
                     </h3>
-                    <h4 className="text-base font-medium tracking-tight leading-relaxed mb-6 text-gray-300">
+
+                    {/* SUBTITLE */}
+
+                    <h4
+                      className="
+                        text-base
+                        font-medium
+                        tracking-tight
+                        leading-relaxed
+                        text-gray-300
+                        mb-6
+                      "
+                    >
                       {service.subtitle}
                     </h4>
 
-                    {/* Deliverables */}
-                    <div className="mt-auto pt-6 border-t border-white/20">
+                    {/* ==================================================
+                        DELIVERABLES
+                        ================================================== */}
+
+                    <div
+                      className="
+                        mt-auto
+                        pt-6
+                        border-t
+                        border-white/20
+                      "
+                    >
                       <ul className="flex flex-col gap-3">
                         {service.deliverables.map((item, i) => (
                           <li
                             key={i}
-                            className="text-xs font-semibold tracking-widest uppercase text-gray-300 flex items-center gap-3"
+                            className="
+                              text-[10px]
+                              font-semibold
+                              tracking-widest
+                              uppercase
+                              text-gray-300
+                              flex
+                              items-start
+                              gap-3
+                            "
                           >
-                            <span className="w-1.5 h-1.5 bg-white rounded-full flex-shrink-0" />
-                            {item}
+                            <span
+                              className="
+                                mt-1
+                                w-1.5
+                                h-1.5
+                                bg-white
+                                rounded-full
+                                flex-shrink-0
+                              "
+                            />
+
+                            <span>{item}</span>
                           </li>
                         ))}
                       </ul>
@@ -225,103 +497,285 @@ export function Services() {
             }))}
             cardWidth={350}
             cardHeight={580}
+            radius={24}
             depth={160}
-            spread={60}
-            tilt={22}
+            spread={48}
+            tilt={18}
             tiltDirection="right"
             perspective={1400}
             visibleCards={4}
-            falloff={0.2}
+            falloff={0.22}
             blur={0}
+            duration={500}
+            ease="power3.out"
             autoplay={false}
-            loop={true}
+
+            /*
+             * VERY IMPORTANT:
+             *
+             * The cards must stop at CARD 04.
+             * They must NOT loop back to CARD 01.
+             */
+            loop={false}
+
             showControls={false}
             showIndicators={false}
+
+            /*
+             * Page scroll controls the carousel.
+             *
+             * If this is false, the carousel's own wheel
+             * handler will compete with ScrollTrigger.
+             */
             disableInteraction={true}
           />
         </div>
       </div>
 
-      {/* --- Responsive Grid Area --- */}
-      <div className="w-full px-6 md:px-12 lg:px-24 pb-32">
-        {/* Desktop View: Grid */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* ==========================================================
+          DESKTOP GRID
+          ========================================================== */}
+
+      <div
+        className="
+          w-full
+          px-6
+          md:px-12
+          lg:px-24
+          pb-32
+        "
+      >
+        <div
+          className="
+            hidden
+            md:grid
+            md:grid-cols-2
+            lg:grid-cols-4
+            gap-6
+          "
+        >
           {services.map((service, index) => {
             const isActive = activeCard === index;
 
             return (
               <article
                 key={service.id}
-                className={`group relative bg-[#111111] border border-white/10 rounded-[24px] flex flex-col justify-start transition-all duration-500 cursor-pointer overflow-hidden min-h-[420px] outline-none ${isActive
-                    ? "bg-[#1a1a1a] scale-105 z-10 shadow-2xl"
-                    : "bg-[#111111] scale-100"
-                  } md:hover:bg-[#1a1a1a] md:hover:scale-105 md:hover:z-10 md:hover:shadow-2xl`}
+                className={`
+                  group
+                  relative
+                  bg-[#111111]
+                  border
+                  border-white/10
+                  rounded-[24px]
+                  flex
+                  flex-col
+                  justify-start
+                  transition-all
+                  duration-500
+                  cursor-pointer
+                  overflow-hidden
+                  min-h-[420px]
+                  outline-none
+
+                  ${
+                    isActive
+                      ? "bg-[#1a1a1a] scale-105 z-10 shadow-2xl"
+                      : "bg-[#111111] scale-100"
+                  }
+
+                  md:hover:bg-[#1a1a1a]
+                  md:hover:scale-105
+                  md:hover:z-10
+                  md:hover:shadow-2xl
+                `}
                 onClick={() => handleCardClick(index)}
                 tabIndex={0}
                 role="button"
                 aria-pressed={isActive}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
+                  if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                  ) {
                     event.preventDefault();
                     handleCardClick(index);
                   }
                 }}
               >
-                {/* Background Image */}
+                {/* IMAGE */}
+
                 <div
-                  className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 pointer-events-none ${isActive
-                      ? "opacity-100 scale-105"
-                      : "opacity-50 scale-100"
-                    } md:group-hover:opacity-100 md:group-hover:scale-105`}
+                  className={`
+                    absolute
+                    inset-0
+                    bg-cover
+                    bg-center
+                    transition-all
+                    duration-1000
+                    pointer-events-none
+
+                    ${
+                      isActive
+                        ? "opacity-100 scale-105"
+                        : "opacity-50 scale-100"
+                    }
+
+                    md:group-hover:opacity-100
+                    md:group-hover:scale-105
+                  `}
                   style={{
                     backgroundImage: `url(${service.image})`,
                   }}
                 />
 
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/80 to-black/20 pointer-events-none" />
+                {/* OVERLAY */}
 
-                {/* Card Content */}
-                <div className="relative p-8 md:p-10 flex flex-col h-full z-10">
+                <div
+                  className="
+                    absolute
+                    inset-0
+                    bg-gradient-to-t
+                    from-[#111111]
+                    via-[#111111]/80
+                    to-black/20
+                    pointer-events-none
+                  "
+                />
+
+                {/* CONTENT */}
+
+                <div
+                  className="
+                    relative
+                    p-8
+                    md:p-10
+                    flex
+                    flex-col
+                    h-full
+                    z-10
+                  "
+                >
+                  {/* NUMBER */}
+
                   <span
-                    className={`block font-mono text-xl md:text-2xl font-bold mb-6 tracking-tighter transition-colors duration-500 ${isActive
-                        ? "text-white"
-                        : "text-white/40"
-                      } md:group-hover:text-white`}
+                    className={`
+                      block
+                      font-mono
+                      text-xl
+                      md:text-2xl
+                      font-bold
+                      mb-6
+                      tracking-tighter
+                      transition-colors
+                      duration-500
+
+                      ${
+                        isActive
+                          ? "text-white"
+                          : "text-white/40"
+                      }
+
+                      md:group-hover:text-white
+                    `}
                   >
                     {service.id}
                   </span>
 
-                  <h3 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase leading-[1.1] text-white mb-4">
+                  {/* TITLE */}
+
+                  <h3
+                    className="
+                      text-3xl
+                      md:text-4xl
+                      font-bold
+                      tracking-tighter
+                      uppercase
+                      leading-[1.1]
+                      text-white
+                      mb-4
+                    "
+                  >
                     {service.title}
                   </h3>
 
+                  {/* SUBTITLE */}
+
                   <h4
-                    className={`text-sm md:text-base font-medium tracking-tight leading-relaxed mb-6 transition-colors duration-500 ${isActive
-                        ? "text-white"
-                        : "text-gray-300"
-                      } md:group-hover:text-white`}
+                    className={`
+                      text-sm
+                      md:text-base
+                      font-medium
+                      tracking-tight
+                      leading-relaxed
+                      mb-6
+                      transition-colors
+                      duration-500
+
+                      ${
+                        isActive
+                          ? "text-white"
+                          : "text-gray-300"
+                      }
+
+                      md:group-hover:text-white
+                    `}
                   >
                     {service.subtitle}
                   </h4>
 
-                  {/* Deliverables */}
+                  {/* DELIVERABLES */}
+
                   <div
-                    className={`mt-auto pt-6 border-t border-white/20 transform transition-all duration-500 ${isActive
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-4"
-                      } md:group-hover:opacity-100 md:group-hover:translate-y-0`}
+                    className={`
+                      mt-auto
+                      pt-6
+                      border-t
+                      border-white/20
+                      transform
+                      transition-all
+                      duration-500
+
+                      ${
+                        isActive
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 translate-y-4"
+                      }
+
+                      md:group-hover:opacity-100
+                      md:group-hover:translate-y-0
+                    `}
                   >
                     <ul className="flex flex-col gap-3">
-                      {service.deliverables.map((item, i) => (
-                        <li
-                          key={i}
-                          className="text-[10px] md:text-xs font-semibold tracking-widest uppercase text-gray-300 flex items-center gap-3"
-                        >
-                          <span className="w-1.5 h-1.5 bg-white rounded-full flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
+                      {service.deliverables.map(
+                        (item, i) => (
+                          <li
+                            key={i}
+                            className="
+                              text-[10px]
+                              md:text-xs
+                              font-semibold
+                              tracking-widest
+                              uppercase
+                              text-gray-300
+                              flex
+                              items-center
+                              gap-3
+                            "
+                          >
+                            <span
+                              className="
+                                w-1.5
+                                h-1.5
+                                bg-white
+                                rounded-full
+                                flex-shrink-0
+                              "
+                            />
+
+                            {item}
+                          </li>
+                        )
+                      )}
                     </ul>
                   </div>
                 </div>
