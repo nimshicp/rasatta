@@ -96,6 +96,7 @@ export function Services() {
               key={service.id}
               className="group relative bg-[#111111] hover:bg-[#1a1a1a] border border-white/10 rounded-[24px] flex flex-col justify-start transition-all duration-500 hover:scale-105 hover:z-10 hover:shadow-2xl cursor-pointer overflow-hidden min-h-[420px] outline-none"
               onClick={() => {}}
+              onTouchStart={() => {}}
               tabIndex={0}
             >
               {/* Background Image */}

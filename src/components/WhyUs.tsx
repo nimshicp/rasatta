@@ -85,7 +85,10 @@ export function WhyUs() {
             <div
               key={index}
               ref={el => { if (el) reasonsRef.current[index] = el; }}
-              className="group"
+              className="group cursor-pointer outline-none"
+              onClick={() => {}}
+              onTouchStart={() => {}}
+              tabIndex={0}
             >
               <div className="flex flex-col gap-4">
                 {/* Separator line */}

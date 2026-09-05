@@ -79,7 +79,10 @@ export function Testimonials() {
             <div
               key={index}
               ref={el => { if (el) itemsRef.current[index] = el; }}
-              className="bg-[#0a0a0a] p-10 md:p-14 flex gap-6 md:gap-10 group hover:bg-[#0f0f0f] transition-colors"
+              className="bg-[#0a0a0a] p-10 md:p-14 flex gap-6 md:gap-10 group hover:bg-[#0f0f0f] transition-colors cursor-pointer outline-none"
+              onClick={() => {}}
+              onTouchStart={() => {}}
+              tabIndex={0}
             >
               {/* Quote Icon */}
               <div className="flex-shrink-0 text-6xl md:text-7xl font-serif text-[#E4C5AE] leading-none -mt-4 opacity-90 group-hover:opacity-100 transition-opacity">

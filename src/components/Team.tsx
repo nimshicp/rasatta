@@ -89,6 +89,7 @@ export function Team() {
               ref={el => { if (el) cardsRef.current[index] = el; }}
               className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer shadow-lg outline-none"
               onClick={() => {}}
+              onTouchStart={() => {}}
               tabIndex={0}
             >
               {/* Image */}
