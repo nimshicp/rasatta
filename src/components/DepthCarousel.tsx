@@ -339,139 +339,44 @@ const DepthCarousel = forwardRef<
 
           /*
            * ======================================================
-           * DEPTH
+           * VERTICAL STACK LOGIC
            * ======================================================
            */
 
-          const back = Math.max(0, d);
+          const stackOffset = 40; // Increased to show more of the bottom edges
+          const exitDistance = window.innerHeight * 0.9;
 
-          const absDistance = Math.abs(d);
-
-          const shown =
-            absDistance <=
-            cfg.visibleCards + 0.5;
-
-          /*
-           * Z POSITION
-           *
-           * Current card:
-           *
-           * d = 0
-           * translateZ(0)
-           *
-           * Cards behind:
-           *
-           * d = 1
-           * translateZ(-depth)
-           *
-           * d = 2
-           * translateZ(-depth * 2)
-           */
-          const tz =
-            -cfg.depth * d;
-
-          /*
-           * Horizontal stack offset.
-           */
-          const tx =
-            dir *
-            cfg.spread *
-            d;
-
-          /*
-           * Slight perspective tilt.
-           */
-          const ry =
-            dir *
-            cfg.tilt *
-            clamp(d, 0, 1);
-
-          /*
-           * ======================================================
-           * OPACITY
-           * ======================================================
-           *
-           * FRONT CARD:
-           *
-           * d = 0
-           * opacity = 1
-           *
-           * BACK CARDS:
-           *
-           * remain visible but darker.
-           *
-           * PREVIOUS CARD:
-           *
-           * gradually disappears after passing.
-           */
-
+          let ty = 0;
+          let scaleMultiplier = 1;
           let opacity = 1;
+          let brightness = 1;
 
-          if (d < 0) {
-            opacity = Math.max(
-              0,
-              1 + d
-            );
+          if (d > 0) {
+            // Cards behind
+            ty = d * stackOffset;
+            scaleMultiplier = 1 - 0.02 * d; // e.g. 0.98, 0.96...
+            opacity = Math.max(0, 1 - 0.1 * d); // e.g. 0.9, 0.8...
+            brightness = Math.max(0.18, 1 - d * cfg.falloff); 
+          } else if (d < 0) {
+            if (d <= -1) {
+              // Cards that already left
+              ty = -exitDistance;
+              opacity = 0;
+            } else {
+              // Card currently leaving (-1 < d < 0)
+              ty = d * exitDistance;
+              opacity = 1 + d * 0.5; // Fades out slightly as it moves up
+            }
+          } else {
+            // Current card (d === 0)
+            ty = 0;
           }
 
-          if (!shown) {
-            opacity = 0;
-          }
+          const shown = Math.abs(d) <= cfg.visibleCards + 0.5;
+          if (!shown) opacity = 0;
 
-          /*
-           * Keep the current/front card fully visible.
-           */
-          if (
-            Math.abs(d) < 0.001
-          ) {
-            opacity = 1;
-          }
-
-          /*
-           * ======================================================
-           * BRIGHTNESS
-           * ======================================================
-           */
-
-          const brightness =
-            Math.max(
-              0.18,
-              1 -
-                back *
-                  cfg.falloff
-            );
-
-          /*
-           * ======================================================
-           * BLUR
-           * ======================================================
-           */
-
-          const blurPx =
-            cfg.blur > 0
-              ? Math.min(
-                  cfg.blur,
-                  (back /
-                    Math.max(
-                      1,
-                      cfg.visibleCards
-                    )) *
-                    cfg.blur
-                )
-              : 0;
-
-          /*
-           * ======================================================
-           * Z-INDEX
-           * ======================================================
-           *
-           * Lower d = closer/front.
-           *
-           * Current card gets highest z-index.
-           */
-          const zi = Math.round(
-            2000 - d * 20
-          );
+          // Z-index: lower d = higher z-index (outgoing card stays above incoming)
+          const zi = Math.round(2000 - d * 100);
 
           /*
            * ======================================================
@@ -481,30 +386,20 @@ const DepthCarousel = forwardRef<
 
           el.style.transform = `
             translate(-50%, -50%)
-            scale(${sc})
-            translateX(${tx.toFixed(2)}px)
-            translateZ(${tz.toFixed(2)}px)
-            rotateY(${ry.toFixed(3)}deg)
+            scale(${sc * scaleMultiplier})
+            translateY(${ty.toFixed(2)}px)
           `;
 
-          el.style.opacity =
-            opacity.toFixed(3);
+          el.style.opacity = opacity.toFixed(3);
 
           el.style.filter = `
-            brightness(${brightness.toFixed(
-              3
-            )})
-            blur(${blurPx.toFixed(2)}px)
+            brightness(${brightness.toFixed(3)})
           `;
 
-          el.style.zIndex =
-            String(zi);
+          el.style.zIndex = String(zi);
 
           el.style.pointerEvents =
-            shown &&
-            opacity > 0.05
-              ? "auto"
-              : "none";
+            shown && opacity > 0.05 ? "auto" : "none";
 
           /*
            * ======================================================
@@ -512,18 +407,14 @@ const DepthCarousel = forwardRef<
            * ======================================================
            */
 
-          const overlay =
-            overlayRefs.current[i];
+          const overlay = overlayRefs.current[i];
 
           if (overlay) {
-            overlay.style.opacity =
-              clamp(
-                back *
-                  cfg.falloff *
-                  1.25,
-                0,
-                0.86
-              ).toFixed(3);
+            overlay.style.opacity = clamp(
+              (d > 0 ? d : 0) * cfg.falloff * 1.25,
+              0,
+              0.86
+            ).toFixed(3);
           }
         }
       },

@@ -498,16 +498,16 @@ export function Services() {
             cardWidth={350}
             cardHeight={580}
             radius={24}
-            depth={160}
-            spread={48}
-            tilt={18}
+            depth={0}
+            spread={0}
+            tilt={0}
             tiltDirection="right"
-            perspective={1400}
+            perspective={0}
             visibleCards={4}
-            falloff={0.22}
+            falloff={0.15}
             blur={0}
-            duration={500}
-            ease="power3.out"
+            duration={0}
+            ease="none"
             autoplay={false}
 
             /*
@@ -542,7 +542,8 @@ export function Services() {
           px-6
           md:px-12
           lg:px-24
-          pb-32
+          pb-0
+          md:pb-32
         "
       >
         <div
@@ -577,10 +578,9 @@ export function Services() {
                   min-h-[420px]
                   outline-none
 
-                  ${
-                    isActive
-                      ? "bg-[#1a1a1a] scale-105 z-10 shadow-2xl"
-                      : "bg-[#111111] scale-100"
+                  ${isActive
+                    ? "bg-[#1a1a1a] scale-105 z-10 shadow-2xl"
+                    : "bg-[#111111] scale-100"
                   }
 
                   md:hover:bg-[#1a1a1a]
@@ -614,10 +614,9 @@ export function Services() {
                     duration-1000
                     pointer-events-none
 
-                    ${
-                      isActive
-                        ? "opacity-100 scale-105"
-                        : "opacity-50 scale-100"
+                    ${isActive
+                      ? "opacity-100 scale-105"
+                      : "opacity-50 scale-100"
                     }
 
                     md:group-hover:opacity-100
@@ -669,10 +668,9 @@ export function Services() {
                       transition-colors
                       duration-500
 
-                      ${
-                        isActive
-                          ? "text-white"
-                          : "text-white/40"
+                      ${isActive
+                        ? "text-white"
+                        : "text-white/40"
                       }
 
                       md:group-hover:text-white
@@ -711,10 +709,9 @@ export function Services() {
                       transition-colors
                       duration-500
 
-                      ${
-                        isActive
-                          ? "text-white"
-                          : "text-gray-300"
+                      ${isActive
+                        ? "text-white"
+                        : "text-gray-300"
                       }
 
                       md:group-hover:text-white
@@ -735,10 +732,9 @@ export function Services() {
                       transition-all
                       duration-500
 
-                      ${
-                        isActive
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 translate-y-4"
+                      ${isActive
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-4"
                       }
 
                       md:group-hover:opacity-100
