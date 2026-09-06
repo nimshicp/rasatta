@@ -343,7 +343,7 @@ const DepthCarousel = forwardRef<
            * ======================================================
            */
 
-          const stackOffset = 40; // Increased to show more of the bottom edges
+          const stackOffset = 28; // Reduced slightly to balance bottom edge visibility
           const exitDistance = window.innerHeight * 0.9;
 
           let ty = 0;

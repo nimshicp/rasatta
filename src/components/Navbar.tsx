@@ -43,7 +43,7 @@ export function Navbar({ theme = "dark" }: NavbarProps) {
 
         {/* Center Links (Hidden on Mobile) */}
         <div className={`hidden lg:flex items-center gap-8 text-[15px] font-medium ${textMuted}`}>
-          <Link href="/#work" className={`cursor-pointer transition-colors ${hoverColor}`}>Work</Link>
+          <Link href="/#featured-work" className={`cursor-pointer transition-colors ${hoverColor}`}>Work</Link>
           <Link href="/#expertise" className={`cursor-pointer transition-colors ${hoverColor}`}>Solutions</Link>
           <Link href="/#about" className={`cursor-pointer transition-colors ${hoverColor}`}>About</Link>
           <Link href="/#team" className={`cursor-pointer transition-colors ${hoverColor}`}>Team</Link>
@@ -77,9 +77,8 @@ export function Navbar({ theme = "dark" }: NavbarProps) {
           }`}
       >
         <div className="flex flex-col items-center gap-8 text-3xl font-medium text-white/80">
-          <Link href="/#work" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Work</Link>
+          <Link href="/#featured-work" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Work</Link>
           <Link href="/#expertise" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Solutions</Link>
-          <Link href="/#why-us" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Approach</Link>
           <Link href="/#about" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">About</Link>
           <Link href="/#team" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Team</Link>
           <Link href="/#contact" onClick={() => setIsOpen(false)} className="hover:text-white transition-colors">Contact</Link>

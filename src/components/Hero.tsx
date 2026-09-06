@@ -133,9 +133,9 @@ export function Hero() {
             <a href="tel:9745647655" className="bg-white text-black px-8 py-4 rounded-full text-sm font-semibold tracking-wide uppercase transition-transform hover:scale-105 inline-block text-center">
               Book a Strategy Call
             </a>
-            <Link href="/#work" className="bg-transparent border border-gray-600 text-white px-8 py-4 rounded-full text-sm font-semibold tracking-wide uppercase transition-all hover:bg-white/10 hover:border-gray-400">
+            <button onClick={() => document.getElementById('featured-work')?.scrollIntoView({ behavior: 'smooth' })} className="bg-transparent border border-gray-600 text-white px-8 py-4 rounded-full text-sm font-semibold tracking-wide uppercase transition-all hover:bg-white/10 hover:border-gray-400">
               View Our Work
-            </Link>
+            </button>
           </div>
         </div>
       </div>

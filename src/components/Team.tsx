@@ -163,25 +163,7 @@ export function Team() {
 
                 {/* Content Box */}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end items-center text-center text-white">
-                  {/* View Profile Button */}
-                  <div
-                    className={`mb-6 transition-all duration-500 ease-out ${
-                      isActive
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-4"
-                    } md:group-hover:opacity-100 md:group-hover:translate-y-0`}
-                  >
-                    <button
-                      type="button"
-                      className="flex items-center gap-2 bg-white/10 hover:bg-[#ea580c] backdrop-blur-md border border-white/25 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors duration-300"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                      }}
-                    >
-                      View profile
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
+
 
                   <h3
                     className={`text-2xl font-medium tracking-tight mb-2 transform transition-transform duration-500 ${

@@ -142,7 +142,7 @@ export function Showcase() {
   };
 
   return (
-    <section className="py-24 bg-[#0a0a0a] overflow-hidden relative">
+    <section id="featured-work" className="py-24 bg-[#0a0a0a] overflow-hidden relative">
       {/* Inline styles for hidden scrollbar */}
       <style
         dangerouslySetInnerHTML={{
